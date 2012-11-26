@@ -12,14 +12,22 @@ def new_weight(request):
     else:
         form = WeightForm()
 
-    weights = Weight.view("fatme/all_weights")
-
     return render(request,
                   "weight.html",
                   {
 		   "form": form,
 		   "weight": weight,
-		   "weights": weights
+                  },
+                  context_instance=RequestContext(request))
+
+def home(request):
+
+    weights = Weight.view("fatme/all_weights")
+
+    return render(request,
+                  "home.html",
+                  {
+		   "weights": weights,
                   },
                   context_instance=RequestContext(request))
 

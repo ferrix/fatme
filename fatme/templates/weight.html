@@ -3,10 +3,6 @@
 <title>Fat Me</title>
 </head>
 <body>
-    {% for w in weights %}
-    <p>{{ w.date }} - {{ w.weight }}</p>
-    {% endfor %}
-
     <form method="post">
     {% csrf_token %}
     {{ form }}
