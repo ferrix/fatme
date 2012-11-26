@@ -1,5 +1,7 @@
 # Django settings for fatme project.
 
+import os
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -19,6 +21,13 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+
+CLOUDANT_URL = os.environ.get("CLOUDANT_URL")
+
+COUCHDB_DATABASES = (
+    ('fatme', CLOUDANT_URL + '/fatme'),
+)
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -119,6 +128,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'couchdbkit.ext.django',
+    'gunicorn',
 )
 
 # A sample logging configuration. The only tangible logging
