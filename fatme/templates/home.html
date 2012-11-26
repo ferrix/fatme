@@ -3,8 +3,13 @@
 <title>Fat Me</title>
 </head>
 <body>
+    <h1>Weight of My Fat Arse</h1>
+    <p>These numbers describe the weight of my fat arse day by day in kilograms.</p>
+    <table>
     {% for w in weights %}
-    <p>{{ w.date }} - {{ w.weight }}</p>
+    {% ifchanged %}<tr><th colspan="2">{{ w.date|date:"F Y" }}</th></tr>{% endifchanged %}
+    <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td></tr>
     {% endfor %}
+    </table>
 </body>
 </html>
