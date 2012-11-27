@@ -28,9 +28,13 @@ def home(request):
 
     start = 124.3
     goal = 89.9
+    height = 182
+    age = 29
 
     left = today - goal
     done = start - today
+
+    consumption = 66.5+(13.75*today)+(5.003*height)+(6.775*age)
 
     return render(request,
                   "home.html",
@@ -40,6 +44,7 @@ def home(request):
                    "today": today,
                    "left": left,
                    "done": done,
+                   "consumption": consumption,
                   },
                   context_instance=RequestContext(request))
 
