@@ -34,7 +34,7 @@ def home(request):
     left = today - goal
     done = start - today
 
-    consumption = 66.5+(13.75*today)+(5.003*height)+(6.775*age)
+    consumption = (66.5+(13.75*today)+(5.003*height)-(6.775*age))
 
     return render(request,
                   "home.html",
