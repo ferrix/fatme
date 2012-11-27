@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from fatme.forms import WeightForm
 from fatme.models import Weight
+from datetime import date
 
 def new_weight(request):
     weight = None
@@ -24,10 +25,13 @@ def home(request):
 
     weights = Weight.view("fatme/all_weights")
 
+    goal = 89.9
+
     return render(request,
                   "home.html",
                   {
 		   "weights": weights,
+                   "goal": goal,
                   },
                   context_instance=RequestContext(request))
 
