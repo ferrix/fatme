@@ -24,6 +24,7 @@ def new_weight(request):
 def home(request):
 
     weights = Weight.view("fatme/all_weights")
+    today = Weight.view("fatme/today").first()['value']
 
     goal = 89.9
 
@@ -32,6 +33,7 @@ def home(request):
                   {
 		   "weights": weights,
                    "goal": goal,
+                   "today": today,
                   },
                   context_instance=RequestContext(request))
 
