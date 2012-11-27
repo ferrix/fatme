@@ -26,7 +26,11 @@ def home(request):
     weights = Weight.view("fatme/all_weights")
     today = Weight.view("fatme/today").first()['value']
 
+    start = 124.3
     goal = 89.9
+
+    left = today - goal
+    done = start - today
 
     return render(request,
                   "home.html",
@@ -34,6 +38,8 @@ def home(request):
 		   "weights": weights,
                    "goal": goal,
                    "today": today,
+                   "left": left,
+                   "done": done,
                   },
                   context_instance=RequestContext(request))
 

@@ -4,9 +4,9 @@
 </head>
 <body>
     <h1>Weight of My Fat Arse</h1>
-    {% if today %}<p class="today" style="font-size: 3em">{{ today }}</p>{% endif %}
+    {% if today %}<p class="today" style="font-size: 3em">{{ today }} ({{ left }} left)</p>{% endif %}
     <p>These numbers describe the weight of my fat arse day by day in
-    kilograms. My goal is {{ goal }}.</p>
+    kilograms. My goal is {{ goal }}.
     <table>
     {% for w in weights %}
     {% ifchanged %}<tr><th colspan="2">{{ w.date|date:"F Y" }}</th></tr>{% endifchanged %}
