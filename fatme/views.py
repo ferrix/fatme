@@ -24,7 +24,7 @@ def new_weight(request):
 def home(request):
 
     weights = Weight.view("fatme/all_weights")
-    today = Weight.view("fatme/today").first()['value']
+    today = Weight.view("fatme/all_weights", descending=True).first()['weight']
 
     start = 124.3
     goal = 89.9
