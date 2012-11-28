@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from fatme.forms import WeightForm
 from fatme.models import Weight
-from datetime import date
+from datetime import date, timedelta
 
 def new_weight(request):
     weight = None
@@ -37,7 +37,9 @@ def home(request):
 
     days = (today['date']-begin['date']).days
 
-    days_left = round(left/(done/days),1)
+    days_left = round(left/(done/days), 1)
+    est_day = date.today()+timedelta(days=int(days_left))
+    final_day = date(2013, 11, 3)
 
     consumption = (66.5+(13.75*today['weight'])+(5.003*height)-(6.775*age))
 
@@ -53,6 +55,8 @@ def home(request):
                    "begin": begin,
                    "days": days,
                    "days_left": days_left,
+                   "est_day": est_day,
+                   "final_day": final_day,
                   },
                   context_instance=RequestContext(request))
 
