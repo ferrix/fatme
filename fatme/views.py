@@ -43,9 +43,39 @@ def home(request):
 
     consumption = (66.5+(13.75*today['weight'])+(5.003*height)-(6.775*age))
 
+    min = {
+           'change': 0,
+           'chg_day': None,
+           'weight': 0,
+           'day': None,
+          }
+    max = {
+           'change': 0,
+           'chg_day': None,
+           'weight': 0,
+           'day': None,
+          }
+
     for i, weight in enumerate(weights):
         if i > 0:
-            weight['change'] = weight['weight'] - prev
+            change = weight['weight'] - prev
+            weight['change'] = change
+        
+            if change < min['change']:
+                min['change'] = change
+                min['chg_day'] = weight['date']
+            if change > max['change']:
+                max['change'] = change
+                max['chg_day'] = weight['date']
+        else:
+            weight['change'] = ''
+
+        if not max['weight'] or weight['weight'] > max['weight']:
+            max['weight'] = weight['weight']
+            max['day'] = weight['date']
+        if not min['weight'] or weight['weight'] < min['weight']:
+            min['weight'] = weight['weight']
+            min['day'] = weight['date']
         
         prev = weight['weight']
 
@@ -63,6 +93,8 @@ def home(request):
                    "days_left": days_left,
                    "est_day": est_day,
                    "final_day": final_day,
+                   "min": min,
+                   "max": max,
                   },
                   context_instance=RequestContext(request))
 
