@@ -24,8 +24,8 @@ def new_weight(request):
 def home(request):
 
     weights = Weight.view("fatme/all_weights")
-    today = Weight.view("fatme/all_weights", descending=True).first()
-    begin = Weight.view("fatme/all_weights").first()
+    today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
+    begin = Weight.view("fatme/all_weights", limit=1).first()
 
     start = 124.3
     goal = 89.9
@@ -42,6 +42,12 @@ def home(request):
     final_day = date(2013, 11, 3)
 
     consumption = (66.5+(13.75*today['weight'])+(5.003*height)-(6.775*age))
+
+    for i, weight in enumerate(weights):
+        if i > 0:
+            weight['change'] = weight['weight'] - prev
+        
+        prev = weight['weight']
 
     return render(request,
                   "home.html",

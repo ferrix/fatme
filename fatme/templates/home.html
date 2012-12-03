@@ -16,7 +16,7 @@ body {
     <table>
     {% for w in weights %}
     {% ifchanged %}<tr><th colspan="2">{{ w.date|date:"F Y" }}</th></tr>{% endifchanged %}
-    <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td></tr>
+    <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td><td>{{ w.change }}</td></tr>
     {% endfor %}
     </table>
 </body>
