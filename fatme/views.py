@@ -56,9 +56,11 @@ def home(request):
            'day': None,
           }
 
+    prev = []
+
     for i, weight in enumerate(weights):
         if i > 0:
-            change = weight['weight'] - prev
+            change = weight['weight'] - prev[-1]
             weight['change'] = change
         
             if change < min['change']:
@@ -76,8 +78,11 @@ def home(request):
         if not min['weight'] or weight['weight'] < min['weight']:
             min['weight'] = weight['weight']
             min['day'] = weight['date']
+
+        if len(prev) >= 10:
+            weight['avg'] = sum(prev[-10:])/10
         
-        prev = weight['weight']
+        prev.append(weight['weight'])
 
     return render(request,
                   "home.html",

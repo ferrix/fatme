@@ -17,8 +17,8 @@ body {
     <p>The best loss has been {{ min.change }} on {{ min.chg_day|date:"d.m.Y" }} and top gain was {{ max.change }} on {{ max.chg_day|date:"d.m.Y" }}.</p>
     <table>
     {% for w in weights %}
-    {% ifchanged %}<tr><th colspan="2">{{ w.date|date:"F Y" }}</th></tr>{% endifchanged %}
-    <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td><td>{{ w.change }}</td></tr>
+    {% ifchanged %}<tr><th colspan="4">{{ w.date|date:"F Y" }}</th></tr>{% endifchanged %}
+    <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td><td>{{ w.change }}</td><td>{{ w.avg }}</td></tr>
     {% endfor %}
     </table>
 </body>
