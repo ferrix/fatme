@@ -79,10 +79,10 @@ def home(request):
             min['weight'] = weight['weight']
             min['day'] = weight['date']
 
+        prev.append(weight['weight'])
+
         if len(prev) >= 10:
             weight['avg'] = sum(prev[-10:])/10
-        
-        prev.append(weight['weight'])
 
     return render(request,
                   "home.html",
