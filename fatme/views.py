@@ -9,9 +9,7 @@ def new_weight(request):
     if request.POST:
         form = WeightForm(request.POST)
         if form.is_valid():
-            weight = form.save(False)
-            weight._id = weight.date.isoformat()
-            weight.save()
+            weight = form.save()
     else:
         form = WeightForm()
 
