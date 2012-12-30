@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from fatme.forms import WeightForm
 from fatme.models import Weight
@@ -10,11 +10,12 @@ def new_weight(request):
         form = WeightForm(request.POST)
         if form.is_valid():
             weight = form.save()
+            return redirect('home')
     else:
         form = WeightForm()
 
     return render(request,
-                  "weight.html",
+                  "form.html",
                   {
 		   "form": form,
 		   "weight": weight,
@@ -57,6 +58,7 @@ def home(request):
           }
 
     prev = []
+    prev_avg = 0
 
     for i, weight in enumerate(weights):
         if i > 0:
@@ -83,6 +85,9 @@ def home(request):
 
         if len(prev) >= 10:
             weight['avg'] = sum(prev[-10:])/10
+            if prev_avg:
+                weight['chg_avg'] = round(weight['avg'] - prev_avg, 2)
+            prev_avg = weight['avg']
 
     return render(request,
                   "home.html",
