@@ -7,10 +7,27 @@
     <p>These numbers describe the weight of my fat arse day by day in kilograms. My goal is {{ goal }} at {{ final_day|date:"d.m.Y" }}.</p>
     <p>My top weight has been {{ max.weight }} on {{ max.day|date:"d.m.Y" }} and lowest so far {{ min.weight }} on {{ min.day|date:"d.m.Y" }}.</p>
     <p>The best loss has been {{ min.change }} on {{ min.chg_day|date:"d.m.Y" }} and top gain was {{ max.change }} on {{ max.chg_day|date:"d.m.Y" }}.</p>
-    <table>
-    {% for w in weights %}
-    {% ifchanged %}<tr><th colspan="4">{{ w.date|date:"F Y" }}</th></tr>{% endifchanged %}
-    <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td><td>{{ w.change }}</td><td>{{ w.avg }}</td></tr>
-    {% endfor %}
+    <table class="table">
+      <thead>
+        <th>Date</th>
+        <th>Weight</th>
+        <th>Change</th>
+        <th>10 day average</th>
+      </thead>
+      <tbody>
+      {% for w in weights %}
+      {% ifchanged %}
+      <tr>
+        <th colspan="4">{{ w.date|date:"F Y" }}</th>
+      </tr>
+      {% endifchanged %}
+      <tr>
+        <td>{{ w.date|date:"d.m." }}</td>
+        <td>{{ w.weight }}</td>
+        <td>{{ w.change }}</td>
+        <td>{{ w.avg }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
     </table>
 {% endblock "content" %}
