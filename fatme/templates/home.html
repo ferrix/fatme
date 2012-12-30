@@ -1,13 +1,5 @@
-<html>
-<head>
-<title>Fat Me</title>
-<style>
-body {
-   font-family: sans-serif;
-}
-</style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block "content" %}
     <h1>Weight of My Fat Arse</h1>
     <p class="today" style="font-size: 3em;">{{ today.weight }} ({{ done }} gone, {{ left }} left)</p>
     <p>{{ days }} days gone, ~{{ days_left }} to go. At current pace {{ est_day|date:"d.m.Y" }}.</p>
@@ -21,5 +13,4 @@ body {
     <tr><td>{{ w.date|date:"d.m." }}</td><td>{{ w.weight }}</td><td>{{ w.change }}</td><td>{{ w.avg }}</td></tr>
     {% endfor %}
     </table>
-</body>
-</html>
+{% endblock "content" %}

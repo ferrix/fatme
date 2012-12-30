@@ -1,12 +1,8 @@
-<html>
-<head>
-<title>Fat Me</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block "content" %}
     <form method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" />
     </form>
-</body>
-</html>
+{% endblock "content" %}
