@@ -3,6 +3,7 @@ from django.template import RequestContext
 from fatme.forms import WeightForm
 from fatme.models import Weight
 from datetime import date, timedelta
+from couchdbkit.exceptions import ResourceConflict
 
 import logging
 logger = logging.getLogger(__name__)
@@ -16,7 +17,10 @@ def new_weight(request):
         form = WeightForm(request.POST)
         if form.is_valid():
             logger.info('{0} stored a weight'.format(request.user))
-            weight = form.save()
+            try:
+                weight = form.save()
+            except ResourceConflict:
+                logger.error('Storing failed silently: date already exists')
             return redirect('home')
     else:
         form = WeightForm()
