@@ -4,6 +4,9 @@ from fatme.forms import WeightForm
 from fatme.models import Weight
 from datetime import date, timedelta
 
+import logging
+logger = logging.getLogger(__name__)
+
 from snip import logged_in_or_basicauth
 
 @logged_in_or_basicauth('fatme')
@@ -12,6 +15,7 @@ def new_weight(request):
     if request.POST:
         form = WeightForm(request.POST)
         if form.is_valid():
+            logger.info('{0} stored a weight'.format(request.user))
             weight = form.save()
             return redirect('home')
     else:
