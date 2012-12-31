@@ -4,6 +4,9 @@ from fatme.forms import WeightForm
 from fatme.models import Weight
 from datetime import date, timedelta
 
+from snip import logged_in_or_basicauth
+
+@logged_in_or_basicauth('fatme')
 def new_weight(request):
     weight = None
     if request.POST:
