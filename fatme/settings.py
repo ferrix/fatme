@@ -2,12 +2,17 @@
 
 import os
 
+from djheroku import sendgrid
+vars().update(sendgrid())
+
 DEBUG = os.environ.get('DEBUG') and True or False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Ferrix Hovi', 'ferrix@ferrix.fi'),
 )
+
+SERVER_EMAIL='fatme@ferrix.fi'
 
 MANAGERS = ADMINS
 
