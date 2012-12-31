@@ -2,7 +2,7 @@
 
 import os
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') and True or False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
