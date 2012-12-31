@@ -127,6 +127,8 @@ INSTALLED_APPS = (
     'fatme',
 )
 
+from logging.handlers import SysLogHandler
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -145,7 +147,12 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'syslog': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.SysLogHandler',
+            'facility': SysLogHandler.LOG_LOCAL2,
+        },
     },
     'loggers': {
         'django.request': {
