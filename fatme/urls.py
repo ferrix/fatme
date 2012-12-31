@@ -7,7 +7,7 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'fatme.views.home', name='home'),
-    url(r'^add/', 'fatme.views.new_weight', name='new_weight'),
+    url(r'^api/weight/', 'fatme.views.new_weight', name='new_weight'),
     # url(r'^fatme/', include('fatme.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

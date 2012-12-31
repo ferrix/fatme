@@ -44,7 +44,7 @@
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       <h3>Add weight</h3>
     </div>
-    <form method="post" class="form-horizontal" action="/add/">
+    <form method="post" class="form-horizontal" action="/api/weight/">
     <div class="modal-body">
     </div>
     <div class="modal-footer">
@@ -58,6 +58,6 @@
     </form>
   </div>
   <script type="text/javascript">
-    $('#add').click(function() {$('#mmodal').modal({remote: '/add/'}); return false});
+    $('#add').click(function() {$('#mmodal').modal({remote: '/api/weight/'}); return false});
   </script>
 {% endblock "content" %}
