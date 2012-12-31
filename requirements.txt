@@ -4,3 +4,4 @@ couchdbkit==0.6.3
 dj-database-url==0.2.1
 psycopg2==2.4.5
 https://github.com/fubaz/djheroku/zipball/master#egg=djheroku==0.3.4
+newrelic
