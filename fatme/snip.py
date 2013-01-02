@@ -2,6 +2,7 @@ import base64
 
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
+from functools import wraps
 
 #############################################################################
 #
@@ -74,6 +75,7 @@ def logged_in_or_basicauth(realm = ""):
     You can provide the name of the realm to ask for authentication within.
     """
     def view_decorator(func):
+        @wraps(func)
         def wrapper(request, *args, **kwargs):
             return view_or_basicauth(func, request,
                                      lambda u: u.is_authenticated(),
@@ -97,6 +99,7 @@ def has_perm_or_basicauth(perm, realm = ""):
 
     """
     def view_decorator(func):
+        @wraps(func)
         def wrapper(request, *args, **kwargs):
             return view_or_basicauth(func, request,
                                      lambda u: u.has_perm(perm),
