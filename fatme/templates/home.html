@@ -14,19 +14,26 @@
       <p><a href="#" class="btn" id="add">Add weights</a></p>
     </div>
     <div class="span6">
-      <table class="table table-striped">
+      <table class="table">
+      {% for w in weights %}
+      {% ifchanged w.date.year w.date.month %}
+      {% if not forloop.first %}
+        </tbody>
+      </table></tr>
+      {% endif %}
+      <tr><th><a href="javascript:void(0)" data-toggle="collapse" data-target=".{{ w.date|date:"Y-m" }}">{{ w.date|date:"F Y" }}</a></th></tr>
+      <tr><td class="{{ w.date|date:"Y-m" }} collapse{% if w.date.today|date:"Y-m" != w.date|date:"Y-m" %} in{% endif %}"><table class="table table-striped">
         <thead>
-          <th>Date</th>
-          <th>Weight</th>
-          <th>Change</th>
-          <th>10 day average</th>
-          <th>Change</th>
+          <tr>
+            <th>Date</th>
+            <th>Weight</th>
+            <th>Change</th>
+            <th>10 day average</th>
+            <th>Change</th>
+          </tr>
         </thead>
         <tbody>
-        {% for w in weights %}
-        {% ifchanged %}
-        <tr class="info"><td colspan="5">{{ w.date|date:"F Y" }}</td></tr>
-        {% endifchanged %}
+      {% endifchanged %}
         <tr>
           <td>{{ w.date|date:"d.m." }}</td>
           <td>{{ w.weight }}</td>
@@ -36,6 +43,7 @@
         </tr>
         {% endfor %}
         </tbody>
+      </table></td></tr>
       </table>
     </div>
   </div>
@@ -57,7 +65,19 @@
     </div>
     </form>
   </div>
+  <style type="text/css">
+    .collapse td, .collapse th {
+        display: none;
+    }
+    .collapse.in td, .collapse.in th {
+        display: table-cell;
+    }
+    .collapse table {
+        margin-bottom: 0px;
+    }
+  </style>
   <script type="text/javascript">
     $('#add').click(function() {$('#mmodal').modal({remote: '/api/weight/'}); return false});
+    $('.collapse').collapse()
   </script>
 {% endblock "content" %}
