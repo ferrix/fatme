@@ -50,12 +50,15 @@ def home(request):
     done = start - today['weight']
 
     days = (today['date']-begin['date']).days
+    total_days = (final_day - begin['date']).days
 
-    days_left = round(left/(done/days), 1)
+    if done < 1:
+        days_left = total_days
+    else:
+        days_left = round(left/(done/days), 1)
     est_day = date.today()+timedelta(days=int(days_left))
 
     total_goal = start - goal
-    total_days = (final_day - begin['date']).days
     goal_today = round(start-((total_goal/total_days)*days), 1)
 
     diff = today['weight'] - goal_today
