@@ -53,9 +53,9 @@ def home(request):
     est_day = date.today()+timedelta(days=int(days_left))
     final_day = date(2013, 11, 3)
 
-    total_goal = goal - start
+    total_goal = start - goal
     total_days = (final_day - begin['date']).days
-    goal_today = round((total_goal/total_days)*days, 1)
+    goal_today = round(start-((total_goal/total_days)*days), 1)
 
     diff = today['weight'] - goal_today
 
