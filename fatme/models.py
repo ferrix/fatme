@@ -16,6 +16,8 @@ class Start(Document):
     height = FloatProperty(required=True)
     age = IntegerProperty(required=True)
     final_day = DateProperty(required=True)
+    name = StringProperty(required=True)
+    picture = StringProperty(required=True)
 
     def save(self, *args, **kwargs):
         self._id = u's'+self.date.isoformat()

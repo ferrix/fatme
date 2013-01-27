@@ -59,6 +59,8 @@ def last_json(request):
     result['percent_done'] = result['diff'] / result['goal_diff'] * 100
     result['percent_days'] = result['days_left'] / result['total_days'] * 100
     result['latest_age'] = result['days_left'] - result['latest_days_left']
+    result['name'] = start_obj['name']
+    result['picture'] = start_obj['picture']
 
     resp = HttpResponse(json.dumps(result, sort_keys=True), content_type='application/json')
     resp['Access-Control-Allow-Origin'] = '*'
