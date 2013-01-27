@@ -60,7 +60,9 @@ def last_json(request):
     result['percent_days'] = result['days_left'] / result['total_days'] * 100
     result['latest_age'] = result['days_left'] - result['latest_days_left']
 
-    return HttpResponse(json.dumps(result, sort_keys=True), content_type='application/json')
+    resp = HttpResponse(json.dumps(result, sort_keys=True), content_type='application/json')
+    resp['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 def home(request):
 
