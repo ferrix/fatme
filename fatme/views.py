@@ -58,6 +58,7 @@ def home(request):
     goal_today = round(start-((total_goal/total_days)*days), 1)
 
     diff = today['weight'] - goal_today
+    goal_loss_today = start - goal_today
 
     if diff > 0:
         actual = '{0} kg behind'.format(abs(diff))
@@ -137,6 +138,7 @@ def home(request):
                    "total_days": total_days,
                    "total_goal": total_goal,
                    "goal_days_left": goal_days_left,
+                   "goal_loss_today": goal_loss_today,
                   },
                   context_instance=RequestContext(request))
 
