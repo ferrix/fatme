@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.template import RequestContext
 from fatme.forms import WeightForm
 from fatme.models import Weight, Start
 from datetime import date, timedelta
 from couchdbkit.exceptions import ResourceConflict
+import json
 
 import logging
 logger = logging.getLogger(__name__)
@@ -32,6 +34,26 @@ def new_weight(request):
 		   "weight": weight,
                   },
                   context_instance=RequestContext(request))
+
+def last_json(request):
+    today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
+    begin = Weight.view("fatme/all_weights", limit=1).first()
+    start_obj = Start.view("fatme/start", limit=1).first()
+
+    competition_start = date(2013, 1, 27)
+    total_goal = 27.6
+
+    result = {}
+    result['start'] = total_goal+start_obj['goal']
+    result['goal'] = start_obj['goal']
+    result['diff'] = result['start'] - today['weight']
+    result['goal_diff'] = total_goal
+    result['last'] = today['weight']
+    result['last_date'] = today['date'].isoformat()
+    result['today'] = date.today().isoformat()
+    result['percent_done'] = result['diff'] / result['goal_diff'] * 100
+
+    return HttpResponse(json.dumps(result), content_type='application/json')
 
 def home(request):
 
