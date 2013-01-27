@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from fatme.forms import WeightForm
-from fatme.models import Weight
+from fatme.models import Weight, Start
 from datetime import date, timedelta
 from couchdbkit.exceptions import ResourceConflict
 
@@ -38,11 +38,13 @@ def home(request):
     weights = Weight.view("fatme/all_weights")
     today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
     begin = Weight.view("fatme/all_weights", limit=1).first()
+    start_obj = Start.view("fatme/start", limit=1).first()
 
-    start = 124.3
-    goal = 89.9
-    height = 182
-    age = 29
+    start = begin['weight']
+    goal = start_obj['goal']
+    height = start_obj['height']
+    age = start_obj['age']
+    final_day = start_obj['final_day']
 
     left = today['weight'] - goal
     done = start - today['weight']
@@ -51,7 +53,6 @@ def home(request):
 
     days_left = round(left/(done/days), 1)
     est_day = date.today()+timedelta(days=int(days_left))
-    final_day = date(2013, 11, 3)
 
     total_goal = start - goal
     total_days = (final_day - begin['date']).days
