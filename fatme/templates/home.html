@@ -8,9 +8,10 @@
     <div class="span6">
       <p>{{ days }} days gone, ~{{ days_left }} to go. At current pace {{ est_day|date:"d.m.Y" }}.</p>
       <p>Currently consuming {{ consumption }} kcal/d sitting still.</p>
-      <p>These numbers describe the weight of my fat arse day by day in kilograms. My goal is {{ goal }} at {{ final_day|date:"d.m.Y" }}.</p>
+      <p>These numbers describe the weight of my fat arse day by day in kilograms. My goal is {{ goal }} at {{ final_day|date:"d.m.Y" }}. That's a total of {{ total_days }} days. According to plan {{ goal_days_left }} days left.</p>
       <p>My top weight has been {{ max.weight }} on {{ max.day|date:"d.m.Y" }} and lowest so far {{ min.weight }} on {{ min.day|date:"d.m.Y" }}.</p>
       <p>The best loss has been {{ min.change }} on {{ min.chg_day|date:"d.m.Y" }} and top gain was {{ max.change }} on {{ max.chg_day|date:"d.m.Y" }}.</p>
+      <p>At a steady pace I should weigh {{ goal_today }} kg today. So I am {{ actual }}.</p>
       <p><a href="#" class="btn" id="add">Add weights</a></p>
     </div>
     <div class="span6">

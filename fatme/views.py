@@ -53,6 +53,21 @@ def home(request):
     est_day = date.today()+timedelta(days=int(days_left))
     final_day = date(2013, 11, 3)
 
+    total_goal = goal - start
+    total_days = (final_day - begin['date']).days
+    goal_today = round((total_goal/total_days)*days, 1)
+
+    diff = today['weight'] - goal_today
+
+    if diff > 0:
+        actual = '{0} kg behind'.format(abs(diff))
+    elif diff < 0:
+        actual = '{0} kg ahead'.format(abs(diff))
+    else:
+        actual = 'exactly on target'
+
+    goal_days_left = total_days - days
+
     consumption = (66.5+(13.75*today['weight'])+(5.003*height)-(6.775*age))
 
     min = {
@@ -117,6 +132,11 @@ def home(request):
                    "final_day": final_day,
                    "min": min,
                    "max": max,
+                   "goal_today": goal_today,
+                   "actual": actual,
+                   "total_days": total_days,
+                   "total_goal": total_goal,
+                   "goal_days_left": goal_days_left,
                   },
                   context_instance=RequestContext(request))
 
