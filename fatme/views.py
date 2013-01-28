@@ -48,7 +48,7 @@ def last_json(request):
     result['start_date'] = competition_start.isoformat()
     result['goal'] = start_obj['goal']
     result['goal_date'] = start_obj['final_day'].isoformat()
-    result['diff'] = result['start'] - today['weight']
+    result['diff'] = round(result['start'] - today['weight'], 2)
     result['goal_diff'] = total_goal
     result['latest'] = today['weight']
     result['latest_date'] = today['date'].isoformat()
@@ -56,8 +56,8 @@ def last_json(request):
     result['today'] = date.today().isoformat()
     result['total_days'] = (start_obj['final_day'] - competition_start).days
     result['days_left'] = (start_obj['final_day'] - date.today()).days
-    result['percent_done'] = result['diff'] / result['goal_diff'] * 100
-    result['percent_days'] = result['days_left'] / result['total_days'] * 100
+    result['percent_done'] = round(result['diff'] / result['goal_diff'] * 100, 2)
+    result['percent_days'] = round(result['days_left'] / result['total_days'] * 100, 2)
     result['latest_age'] = result['days_left'] - result['latest_days_left']
     result['name'] = start_obj['name']
     result['picture'] = start_obj['picture']
