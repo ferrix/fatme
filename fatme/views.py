@@ -57,7 +57,7 @@ def last_json(request):
     result['total_days'] = (start_obj['final_day'] - competition_start).days
     result['days_left'] = (start_obj['final_day'] - date.today()).days
     result['percent_done'] = round(result['diff'] / result['goal_diff'] * 100, 2)
-    result['percent_days'] = round(result['days_left'] / result['total_days'] * 100, 2)
+    result['percent_days'] = round((float(result['days_left']) / float(result['total_days'])) * 100, 2)
     result['latest_age'] = result['days_left'] - result['latest_days_left']
     result['name'] = start_obj['name']
     result['picture'] = start_obj['picture']
