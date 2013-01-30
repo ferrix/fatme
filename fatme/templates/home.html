@@ -30,6 +30,7 @@
             <th>Date</th>
             <th>Weight</th>
             <th>Change</th>
+            <th>Week change</th>
             <th>Week average</th>
             <th>Change</th>
           </tr>
@@ -40,6 +41,7 @@
           <td>{{ w.date|date:"d.m." }}</td>
           <td>{{ w.weight }}</td>
           <td>{{ w.change }}</td>
+          <td>{{ w.week_chg }}</td>
           <td>{{ w.avg }}</td>
           <td{% if w.chg_avg < -0.2 %} class="text-success"{% else %}{% if w.chg_avg > 0.0 %} class="text-error"{% endif %}{% endif %}>{{ w.chg_avg }}</td>
         </tr>

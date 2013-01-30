@@ -147,9 +147,9 @@ def home(request):
 
         prev.append(weight['weight'])
 
-        if len(prev) >= 10:
-            weight['avg10'] = sum(prev[-10:])/10
+        if len(prev) >= 7:
             weight['avg'] = round(sum(prev[-7:])/7, 2)
+            weight['week_chg'] = round(weight['weight']-prev[-7], 2)
             if prev_avg:
                 weight['chg_avg'] = round(weight['avg'] - prev_avg, 2)
             prev_avg = weight['avg']
