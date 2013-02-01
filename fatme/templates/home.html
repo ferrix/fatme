@@ -13,6 +13,8 @@
       <p>My top weight has been {{ max.weight }} on {{ max.day|date:"d.m.Y" }} and lowest so far {{ min.weight }} on {{ min.day|date:"d.m.Y" }}.</p>
       <p>The best loss has been {{ min.change }} on {{ min.chg_day|date:"d.m.Y" }} and top gain was {{ max.change }} on {{ max.chg_day|date:"d.m.Y" }}.</p>
       <p>At a steady pace I should weigh {{ goal_today }} kg today meaning a {{ goal_loss_today }} loss by now. So I am {{ actual }}.</p>
+      <p>My BMI in the beginning was {{ begin.bmi }} and it is {{ today.bmi }} today. The Trefethen mass index was
+      {{ begin.trefethen }} and is {{ today.trefethen }}.</p>
       <p><a href="#" class="btn" id="add">Add weights</a></p>
     </div>
     <div class="span6">

@@ -124,6 +124,13 @@ def home(request):
     prev = []
     prev_avg = 0
 
+    height_m = start_obj['height'] / 100
+
+    today['bmi'] = today['weight'] / (height_m ** 2)
+    today['trefethen'] = (1.3 * today['weight']) / (height_m ** 2.5)
+    begin['bmi'] = begin['weight'] / (height_m ** 2)
+    begin['trefethen'] = (1.3 * begin['weight']) / (height_m ** 2.5)
+
     for i, weight in enumerate(weights):
         if i > 0:
             change = weight['weight'] - prev[-1]
