@@ -126,10 +126,10 @@ def home(request):
 
     height_m = start_obj['height'] / 100
 
-    today['bmi'] = today['weight'] / (height_m ** 2)
-    today['trefethen'] = (1.3 * today['weight']) / (height_m ** 2.5)
-    begin['bmi'] = begin['weight'] / (height_m ** 2)
-    begin['trefethen'] = (1.3 * begin['weight']) / (height_m ** 2.5)
+    today['bmi'] = round(today['weight'] / (height_m ** 2), 2)
+    today['trefethen'] = round((1.3 * today['weight']) / (height_m ** 2.5), 2)
+    begin['bmi'] = round(begin['weight'] / (height_m ** 2), 2)
+    begin['trefethen'] = round((1.3 * begin['weight']) / (height_m ** 2.5), 2)
 
     for i, weight in enumerate(weights):
         if i > 0:
