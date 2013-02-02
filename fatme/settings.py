@@ -156,7 +156,6 @@ LOGGING = {
         'syslog': {
             'level': 'DEBUG',
             'class': 'logging.handlers.SysLogHandler',
-            'facility': SysLogHandler.LOG_LOCAL2,
         },
     },
     'loggers': {
