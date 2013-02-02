@@ -6,7 +6,8 @@ class Weight(Document):
     weight = FloatProperty(required=True)
 
     def save(self, *args, **kwargs):
-        self._id = self.date.isoformat()
+        if not self._id:
+            self._id = self.date.isoformat()
         super(Weight, self).save(*args, **kwargs)
 
 class Start(Document):
@@ -20,5 +21,6 @@ class Start(Document):
     picture = StringProperty(required=True)
 
     def save(self, *args, **kwargs):
-        self._id = u's'+self.date.isoformat()
+        if not self._id:
+            self._id = u's'+self.date.isoformat()
         super(Start, self).save(*args, **kwargs)

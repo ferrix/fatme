@@ -16,7 +16,10 @@ from snip import logged_in_or_basicauth
 def new_weight(request):
     weight = None
     if request.POST:
-        form = WeightForm(request.POST)
+        instance = None 
+        if 'date' in request.POST:
+            instance = Weight.get_or_create(request.POST['date'])
+        form = WeightForm(request.POST, instance=instance)
         if form.is_valid():
             logger.info('{0} stored a weight'.format(request.user))
             try:
