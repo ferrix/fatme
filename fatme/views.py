@@ -18,7 +18,10 @@ def new_weight(request):
     if request.POST:
         instance = None 
         if 'date' in request.POST:
-            instance = Weight.get_or_create(request.POST['date'])
+            try:
+                instance = Weight.get(request.POST['date'])
+            except:
+                pass 
         form = WeightForm(request.POST, instance=instance)
         if form.is_valid():
             logger.info('{0} stored a weight'.format(request.user))
