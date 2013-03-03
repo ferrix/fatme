@@ -8,7 +8,8 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'fatme.views.home', name='home'),
     url(r'^api/weight/$', 'fatme.views.new_weight', name='new_weight'),
-    url(r'^api/weight/latest/$', 'fatme.views.last_json', name='api'),
+    url(r'^api/weight/latest/$', 'fatme.views.last_json', name='latest'),
+    url(r'^api/weight/csv', 'fatme.views.csvhistory', name='csv'),
     # url(r'^fatme/', include('fatme.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

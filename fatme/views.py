@@ -1,16 +1,19 @@
-from django.shortcuts import render, redirect
+import csv
+import json
+import logging
+from StringIO import StringIO
+from datetime import date, timedelta
+
 from django.http import HttpResponse
 from django.template import RequestContext
+from django.shortcuts import render, redirect
+from couchdbkit.exceptions import ResourceConflict
+
 from fatme.forms import WeightForm
 from fatme.models import Weight, Start
-from datetime import date, timedelta
-from couchdbkit.exceptions import ResourceConflict
-import json
-
-import logging
-logger = logging.getLogger(__name__)
-
 from snip import logged_in_or_basicauth
+
+logger = logging.getLogger(__name__)
 
 @logged_in_or_basicauth('fatme')
 def new_weight(request):
@@ -69,6 +72,20 @@ def last_json(request):
     result['picture'] = start_obj['picture']
 
     resp = HttpResponse(json.dumps(result, sort_keys=True), content_type='application/json')
+    resp['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+def csvhistory(request):
+    weights = Weight.view("fatme/all_weights")
+    
+    output = StringIO()
+
+    weightwriter = csv.writer(output, delimiter=',')
+    weightwriter.writerow(['Date','Weight'])
+    for weight in weights:
+        weightwriter.writerow([weight['date'], weight['weight']])
+
+    resp = HttpResponse(output.getvalue(), content_type='text/csv')
     resp['Access-Control-Allow-Origin'] = '*'
     return resp
 
