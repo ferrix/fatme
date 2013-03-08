@@ -5,6 +5,7 @@ from StringIO import StringIO
 from datetime import date, timedelta
 
 from django.http import HttpResponse
+from restkit.errors import RequestFailed
 from django.template import RequestContext
 from django.shortcuts import render, redirect
 from couchdbkit.exceptions import ResourceConflict
@@ -45,9 +46,12 @@ def new_weight(request):
                   context_instance=RequestContext(request))
 
 def last_json(request):
-    today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
-    begin = Weight.view("fatme/all_weights", limit=1).first()
-    start_obj = Start.view("fatme/start", limit=1).first()
+    try:
+        today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
+        begin = Weight.view("fatme/all_weights", limit=1).first()
+        start_obj = Start.view("fatme/start", limit=1).first()
+    except RequestFailed:
+        return HttpResponse(json.dumps({'error': 'The service is temporarily unavailable', 'status': 503}), status=503)
 
     competition_start = date(2013, 1, 27)
     total_goal = 27.6
