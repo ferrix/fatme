@@ -107,11 +107,11 @@ def csvhistory(request):
     output = StringIO()
 
     weightwriter = csv.writer(output, delimiter=',')
-    weightwriter.writerow(['Date','Weight', 'Plan'])
+    weightwriter.writerow(['Date','Plan', 'Weight'])
     for weight in weights:
         days = (weight['date']-start_date).days
         goal_today = round(start-k*days, 4)
-        weightwriter.writerow([weight['date'], weight['weight'], goal_today])
+        weightwriter.writerow([weight['date'], goal_today, weight['weight']])
 
     resp = HttpResponse(output.getvalue(), content_type='text/csv')
     resp['Access-Control-Allow-Origin'] = '*'
