@@ -88,6 +88,6 @@
   <script type="text/javascript">
     $('#add').click(function() {$('#mmodal').modal({remote: '/api/weight/'}); return false});
     $('.collapse').collapse();
-    chart = new Dygraph(document.getElementById('history'), '/api/weight/csv/', {legend: 'always', 'Plan': {strokePattern: [7,2,2,2]}});
+    chart = new Dygraph(document.getElementById('history'), '/api/weight/csv/', {legend: 'always', 'Plan': {strokePattern: [7,2,2,2]}, labelsDivWidth: 270});
   </script>
 {% endblock "content" %}
