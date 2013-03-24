@@ -81,13 +81,37 @@ def last_json(request):
 
 def csvhistory(request):
     weights = Weight.view("fatme/all_weights")
-    
+    start_obj = Start.view("fatme/start", limit=1).first()
+
+    start = start_obj['start']
+    start_date = start_obj['date']
+    goal = start_obj['goal']
+
+    if start is None:
+        print 'wtf'
+        if start_obj['name'] == 'Ferrix':
+            start = 124.3
+            start_date = date(2012, 10, 19)
+        elif start_obj['name'] == 'Markus':
+            start = 107.0
+            start_date = date(2013, 1, 27)
+
+    total_goal = start - goal
+    total_days = (start_obj['final_day'] - start_date).days
+    k = (total_goal/total_days)
+
+    print 'total days', total_days
+    print 'total goal', total_goal
+    print 'start date', start_date
+
     output = StringIO()
 
     weightwriter = csv.writer(output, delimiter=',')
-    weightwriter.writerow(['Date','Weight'])
+    weightwriter.writerow(['Date','Weight', 'Plan'])
     for weight in weights:
-        weightwriter.writerow([weight['date'], weight['weight']])
+        days = (weight['date']-start_date).days
+        goal_today = round(start-k*days, 4)
+        weightwriter.writerow([weight['date'], weight['weight'], goal_today])
 
     resp = HttpResponse(output.getvalue(), content_type='text/csv')
     resp['Access-Control-Allow-Origin'] = '*'
