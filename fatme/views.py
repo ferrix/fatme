@@ -9,6 +9,7 @@ from restkit.errors import RequestFailed
 from django.template import RequestContext
 from django.shortcuts import render, redirect
 from couchdbkit.exceptions import ResourceConflict
+from django.views.decorators.csrf import csrf_exempt
 
 from fatme.forms import WeightForm
 from fatme.models import Weight, Start
@@ -17,6 +18,7 @@ from snip import logged_in_or_basicauth
 logger = logging.getLogger(__name__)
 
 @logged_in_or_basicauth('fatme')
+@csrf_exempt
 def new_weight(request):
     weight = None
     if request.POST:
@@ -157,7 +159,10 @@ def home(request):
 
     goal_days_left = total_days - days
 
-    consumption = (66.5+(13.75*today['weight'])+(5.003*height)-(6.775*age))
+    def harris_benedict(weight, height, age):
+        return (66.5+(13.75*weight)+(5.003*height)-(6.775*age))
+
+    consumption = harris_benedict(today['weight'], height, age)
 
     min = {
            'change': 0,
@@ -175,12 +180,22 @@ def home(request):
     prev = []
     prev_avg = 0
 
-    height_m = start_obj['height'] / 100
+    def cm_to_m(cm):
+        return cm / 100
 
-    today['bmi'] = round(today['weight'] / (height_m ** 2), 2)
-    today['trefethen'] = round((1.3 * today['weight']) / (height_m ** 2.5), 2)
-    begin['bmi'] = round(begin['weight'] / (height_m ** 2), 2)
-    begin['trefethen'] = round((1.3 * begin['weight']) / (height_m ** 2.5), 2)
+    height = start_obj['height']
+
+    def bmi(weight, height):
+        return round(weight / (cm_to_m(height) ** 2), 2)
+
+    def trefethen(weight, height):
+        return round((1.3 * weight) / (cm_to_m(height) ** 2.5), 2)
+
+    today['bmi'] = bmi(today['weight'], height)
+    today['trefethen'] = trefethen(today['weight'], height)
+
+    begin['bmi'] = bmi(begin['weight'], height)
+    begin['trefethen'] = trefethen(begin['weight'], height)
 
     for i, weight in enumerate(weights):
         if i > 0:
