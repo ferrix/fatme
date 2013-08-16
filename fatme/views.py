@@ -79,6 +79,7 @@ def last_json(request):
 
     resp = HttpResponse(json.dumps(result, sort_keys=True), content_type='application/json')
     resp['Access-Control-Allow-Origin'] = '*'
+    resp['Access-Control-Allow-Headers'] = 'X-Requested-With'
     return resp
 
 def csvhistory(request):
