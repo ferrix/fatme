@@ -20,15 +20,21 @@ logger = logging.getLogger(__name__)
 @logged_in_or_basicauth('fatme')
 @csrf_exempt
 def new_weight(request):
+    ''' Add a weight measurement with POST '''
+    if request.POST and 'date' in request.POST:
+        weight_date = request.POST['date']
+    else:
+        weight_date = date.today()
+        
+    try:
+        instance = Weight.get(request.POST['date'])
+    except:
+        instance = None
+
     weight = None
     if request.POST:
-        instance = None 
-        if 'date' in request.POST:
-            try:
-                instance = Weight.get(request.POST['date'])
-            except:
-                pass 
         form = WeightForm(request.POST, instance=instance)
+
         if form.is_valid():
             logger.info('{0} stored a weight'.format(request.user))
             try:
@@ -37,13 +43,13 @@ def new_weight(request):
                 logger.error('Storing failed silently: date already exists')
             return redirect('home')
     else:
-        form = WeightForm()
+        form = WeightForm(instance=instance)
 
     return render(request,
                   "form.html",
                   {
-		   "form": form,
-		   "weight": weight,
+                     "form": form,
+                     "weight": weight,
                   },
                   context_instance=RequestContext(request))
 
