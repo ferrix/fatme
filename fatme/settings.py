@@ -1,6 +1,7 @@
 # Django settings for fatme project.
 
 import os
+import sys
 
 from djheroku import sendgrid
 vars().update(sendgrid())
@@ -156,6 +157,11 @@ LOGGING = {
         'syslog': {
             'level': 'DEBUG',
             'class': 'logging.handlers.SysLogHandler',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
         },
     },
     'loggers': {
