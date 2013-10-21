@@ -96,6 +96,15 @@ def csvhistory(request):
     start_date = start_obj['date']
     goal = start_obj['goal']
 
+    if start is None:
+        print 'wtf'
+        if start_obj['name'] == 'Ferrix':
+            start = 124.3
+            start_date = date(2012, 10, 19)
+        elif start_obj['name'] == 'Markus':
+            start = 107.0
+            start_date = date(2013, 1, 27)
+
     total_goal = start - goal
     total_days = (start_obj['final_day'] - start_date).days
     k = (total_goal/total_days)
@@ -108,6 +117,8 @@ def csvhistory(request):
 
     weightwriter = csv.writer(output, delimiter=',')
     weightwriter.writerow(['Date', 'Plan', 'Weight'])
+
+    prev = []
 
     for weight in weights:
         days = (weight['date']-start_date).days
