@@ -124,6 +124,7 @@ def csvhistory(request):
 
     resp = HttpResponse(output.getvalue(), content_type='text/csv')
     resp['Access-Control-Allow-Origin'] = '*'
+    resp['Access-Control-Allow-Headers'] = 'X-Requested-With'
     return resp
 
 def harris_benedict(weight, height, age):
