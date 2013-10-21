@@ -100,7 +100,6 @@ def csvhistory(request):
     goal = start_obj['goal']
 
     if start is None:
-        print 'wtf'
         if start_obj['name'] == 'Ferrix':
             start = 124.3
             start_date = date(2012, 10, 19)
@@ -111,10 +110,6 @@ def csvhistory(request):
     total_goal = start - goal
     total_days = (start_obj['final_day'] - start_date).days
     k = (total_goal/total_days)
-
-    print 'total days', total_days
-    print 'total goal', total_goal
-    print 'start date', start_date
 
     output = StringIO()
 
