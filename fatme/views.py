@@ -15,7 +15,7 @@ from fatme.forms import WeightForm
 from fatme.models import Weight, Start
 from fatme.snip import logged_in_or_basicauth
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 @logged_in_or_basicauth('fatme')
 @csrf_exempt

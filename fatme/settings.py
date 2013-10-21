@@ -170,5 +170,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagete': True,
+        }
     }
 }
