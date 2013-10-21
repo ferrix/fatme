@@ -243,7 +243,7 @@ def home(request):
     return render(request,
                   "home.html",
                   {
-		   "weights": weights,
+                   "weights": weights,
                    "goal": goal,
                    "today": today,
                    "left": left,
