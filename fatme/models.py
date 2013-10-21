@@ -11,7 +11,7 @@ class Weight(Document):
         super(Weight, self).save(*args, **kwargs)
 
 class Start(Document):
-    date = DateProperty(default=date.today(), required=True)
+    date = DateProperty(default=date.today, required=True)
     start = FloatProperty(required=True)
     goal = FloatProperty(required=True)
     height = FloatProperty(required=True)
