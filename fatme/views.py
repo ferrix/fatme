@@ -24,7 +24,7 @@ def new_weight(request):
     if request.POST and 'date' in request.POST:
         weight_date = request.POST['date']
     else:
-        weight_date = date.today()
+        weight_date = date.today().isoformat()
         
     try:
         instance = Weight.get(request.POST['date'])
