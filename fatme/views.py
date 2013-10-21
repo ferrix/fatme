@@ -101,7 +101,7 @@ def csvhistory(request):
     start_date = start_obj['date']
     goal = start_obj['goal']
 
-    logger.info(start_obj)
+    logger.info(dict(start_obj))
 
     if start is None:
         if start_obj['name'] == 'Ferrix':
