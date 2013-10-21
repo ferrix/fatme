@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from fatme.forms import WeightForm
 from fatme.models import Weight, Start
-from snip import logged_in_or_basicauth
+from fatme.snip import logged_in_or_basicauth
 
 logger = logging.getLogger(__name__)
 
