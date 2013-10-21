@@ -61,6 +61,8 @@ def last_json(request):
     except RequestFailed:
         return HttpResponse(json.dumps({'error': 'The service is temporarily unavailable', 'status': 503}), status=503)
 
+    logger.info(start_obj)
+
     competition_start = date(2013, 1, 27)
     total_goal = 27.6
 
@@ -98,6 +100,8 @@ def csvhistory(request):
     start = start_obj['start']
     start_date = start_obj['date']
     goal = start_obj['goal']
+
+    logger.info(start_obj)
 
     if start is None:
         if start_obj['name'] == 'Ferrix':
