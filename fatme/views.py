@@ -119,6 +119,18 @@ def csvhistory(request):
     resp['Access-Control-Allow-Origin'] = '*'
     return resp
 
+def harris_benedict(weight, height, age):
+    return (66.5+(13.75*weight)+(5.003*height)-(6.775*age))
+
+def cm_to_m(cm):
+    return cm / 100
+
+def bmi(weight, height):
+    return round(weight / (cm_to_m(height) ** 2), 2)
+
+def trefethen(weight, height):
+    return round((1.3 * weight) / (cm_to_m(height) ** 2.5), 2)
+
 def home(request):
 
     weights = Weight.view("fatme/all_weights")
@@ -159,9 +171,6 @@ def home(request):
 
     goal_days_left = total_days - days
 
-    def harris_benedict(weight, height, age):
-        return (66.5+(13.75*weight)+(5.003*height)-(6.775*age))
-
     consumption = harris_benedict(today['weight'], height, age)
 
     min = {
@@ -180,16 +189,7 @@ def home(request):
     prev = []
     prev_avg = 0
 
-    def cm_to_m(cm):
-        return cm / 100
-
     height = start_obj['height']
-
-    def bmi(weight, height):
-        return round(weight / (cm_to_m(height) ** 2), 2)
-
-    def trefethen(weight, height):
-        return round((1.3 * weight) / (cm_to_m(height) ** 2.5), 2)
 
     today['bmi'] = bmi(today['weight'], height)
     today['trefethen'] = trefethen(today['weight'], height)
