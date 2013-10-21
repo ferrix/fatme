@@ -6,7 +6,9 @@ function(doc) {
                             height: doc.height,
                             age: doc.age,
                             name: doc.name,
-                            picture: doc.picture
+                            picture: doc.picture,
+                            weight: doc.weight,
+                            date: doc.date
                            });
     }
 }

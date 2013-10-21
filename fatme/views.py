@@ -57,7 +57,7 @@ def last_json(request):
     try:
         today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
         begin = Weight.view("fatme/all_weights", limit=1).first()
-        start_obj = Start.view("fatme/start", limit=1).first()
+        start_obj = Start.view("fatme/start", limit=1).one()
     except RequestFailed:
         return HttpResponse(json.dumps({'error': 'The service is temporarily unavailable', 'status': 503}), status=503)
 
@@ -97,7 +97,7 @@ def csvhistory(request):
     except RequestFailed:
         return HttpResponse(json.dumps({'error': 'The service is temporarily unavailable', 'status': 503}), status=503)
 
-    start = start_obj['start']
+    start = start_obj['weight']
     start_date = start_obj['date']
     goal = start_obj['goal']
 
@@ -106,7 +106,6 @@ def csvhistory(request):
     if start is None:
         if start_obj['name'] == 'Ferrix':
             start = 124.3
-            start_date = date(2012, 10, 19)
         elif start_obj['name'] == 'Markus':
             start = 107.0
             start_date = date(2013, 1, 27)

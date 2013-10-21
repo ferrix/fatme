@@ -12,7 +12,7 @@ class Weight(Document):
 
 class Start(Document):
     date = DateProperty(default=date.today, required=True)
-    start = FloatProperty(required=True)
+    weight = FloatProperty(required=True)
     goal = FloatProperty(required=True)
     height = FloatProperty(required=True)
     age = IntegerProperty(required=True)
