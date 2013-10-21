@@ -116,8 +116,6 @@ def csvhistory(request):
     weightwriter = csv.writer(output, delimiter=',')
     weightwriter.writerow(['Date', 'Plan', 'Weight'])
 
-    prev = []
-
     for weight in weights:
         days = (weight['date']-start_date).days
         goal_today = round(start-k*days, 4)
