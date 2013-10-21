@@ -89,8 +89,11 @@ def last_json(request):
     return resp
 
 def csvhistory(request):
-    weights = Weight.view("fatme/all_weights")
-    start_obj = Start.view("fatme/start", limit=1).first()
+    try:
+        weights = Weight.view("fatme/all_weights")
+        start_obj = Start.view("fatme/start", limit=1).first()
+    except RequestFailed:
+        return HttpResponse(json.dumps({'error': 'The service is temporarily unavailable', 'status': 503}), status=503)
 
     start = start_obj['start']
     start_date = start_obj['date']
