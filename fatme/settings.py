@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'couchdbkit.ext.django',
     'gunicorn',
+    'raven.contrib.django.raven_compat',
     'fatme',
 )
 

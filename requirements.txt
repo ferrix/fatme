@@ -7,3 +7,4 @@ psycopg2==2.4.5
 newrelic
 pylint==0.26.0
 nose==1.2.1
+raven>=3
