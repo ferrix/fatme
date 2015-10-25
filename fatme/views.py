@@ -44,10 +44,11 @@ def new_weight(request):
     return render(request,
                   "form.html",
                   {
-                     "form": form,
-                     "weight": weight,
+                      "form": form,
+                      "weight": weight,
                   },
                   context_instance=RequestContext(request))
+
 
 def last_json(request):
     try:
@@ -62,7 +63,7 @@ def last_json(request):
     total_goal = 27.6
 
     result = {}
-    result['start'] = total_goal+start_obj['goal']
+    result['start'] = total_goal + start_obj['goal']
     result['start_date'] = competition_start.isoformat()
     result['goal'] = start_obj['goal']
     result['goal_date'] = start_obj['final_day'].isoformat()
@@ -85,6 +86,7 @@ def last_json(request):
     resp['Access-Control-Allow-Headers'] = 'X-Requested-With'
     return resp
 
+
 def csvhistory(request):
     try:
         weights = Weight.view("fatme/all_weights")
@@ -104,7 +106,7 @@ def csvhistory(request):
 
     total_goal = start - goal
     total_days = (start_obj['final_day'] - start_date).days
-    k = (total_goal/total_days)
+    k = (total_goal / total_days)
 
     output = StringIO()
 
@@ -112,11 +114,11 @@ def csvhistory(request):
     weightwriter.writerow(['Date', 'Plan', 'Weight'])
 
     for weight in weights:
-        days = (weight['date']-start_date).days
+        days = (weight['date'] - start_date).days
         if days >= total_days:
             goal_today = goal
         else:
-            goal_today = round(start-k*days, 4)
+            goal_today = round(start - (k * days), 4)
 
         weightwriter.writerow([weight['date'], goal_today, weight['weight']])
 
@@ -125,17 +127,22 @@ def csvhistory(request):
     resp['Access-Control-Allow-Headers'] = 'X-Requested-With'
     return resp
 
+
 def harris_benedict(weight, height, age):
-    return (66.5+(13.75*weight)+(5.003*height)-(6.775*age))
+    return (66.5 + (13.75 * weight) + (5.003 * height) - (6.775 * age))
+
 
 def cm_to_m(cm):
     return cm / 100
 
+
 def bmi(weight, height):
     return round(weight / (cm_to_m(height) ** 2), 2)
 
+
 def trefethen(weight, height):
     return round((1.3 * weight) / (cm_to_m(height) ** 2.5), 2)
+
 
 def home(request):
 
@@ -153,20 +160,19 @@ def home(request):
     left = today['weight'] - goal
     done = start - today['weight']
 
-    days = (today['date']-begin['date']).days
+    days = (today['date'] - begin['date']).days
     total_days = (final_day - begin['date']).days
 
     if done < 1:
         days_left = total_days
     else:
-        days_left = round(left/(done/days), 1)
-    est_day = date.today()+timedelta(days=int(days_left))
+        days_left = round(left / (done / days), 1)
+    est_day = date.today() + timedelta(days=int(days_left))
 
     total_goal = start - goal
     goal_today = round(start-((total_goal/total_days)*days), 1)
 
     diff = today['weight'] - goal_today
-    goal_loss_today = start - goal_today
 
     if diff > 0:
         actual = '{0} kg behind'.format(abs(diff))
@@ -180,17 +186,17 @@ def home(request):
     consumption = harris_benedict(today['weight'], height, age)
 
     min = {
-           'change': 0,
-           'chg_day': None,
-           'weight': 0,
-           'day': None,
-          }
+        'change': 0,
+        'chg_day': None,
+        'weight': 0,
+        'day': None,
+    }
     max = {
-           'change': 0,
-           'chg_day': None,
-           'weight': 0,
-           'day': None,
-          }
+        'change': 0,
+        'chg_day': None,
+        'weight': 0,
+        'day': None,
+    }
 
     prev = []
     prev_avg = 0
@@ -207,7 +213,7 @@ def home(request):
         if i > 0:
             change = weight['weight'] - prev[-1]
             weight['change'] = change
-        
+
             if change < min['change']:
                 min['change'] = change
                 min['chg_day'] = weight['date']
@@ -227,16 +233,15 @@ def home(request):
         prev.append(weight['weight'])
 
         if len(prev) >= 7:
-            weight['avg'] = round(sum(prev[-7:])/7, 2)
-            weight['week_chg'] = round(weight['weight']-prev[-7], 2)
+            weight['avg'] = round(sum(prev[-7:]) / 7, 2)
+            weight['week_chg'] = round(weight['weight'] - prev[-7], 2)
             if prev_avg:
                 weight['chg_avg'] = round(weight['avg'] - prev_avg, 2)
             prev_avg = weight['avg']
 
     return render(request,
                   "home.html",
-                  {
-                   "weights": weights,
+                  {"weights": weights,
                    "goal": goal,
                    "today": today,
                    "left": left,
@@ -255,6 +260,5 @@ def home(request):
                    "total_goal": total_goal,
                    "goal_days_left": goal_days_left,
                    "goal_loss_today": goal_loss_today,
-                  },
+                   },
                   context_instance=RequestContext(request))
-
