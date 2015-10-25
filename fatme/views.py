@@ -17,15 +17,11 @@ from fatme.snip import logged_in_or_basicauth
 
 logger = logging.getLogger()
 
+
 @logged_in_or_basicauth('fatme')
 @csrf_exempt
 def new_weight(request):
     ''' Add a weight measurement with POST '''
-    if request.POST and 'date' in request.POST:
-        weight_date = request.POST['date']
-    else:
-        weight_date = date.today().isoformat()
-        
     try:
         instance = Weight.get(request.POST['date'])
     except:
@@ -56,7 +52,6 @@ def new_weight(request):
 def last_json(request):
     try:
         today = Weight.view("fatme/all_weights", descending=True, limit=1).first()
-        begin = Weight.view("fatme/all_weights", limit=1).first()
         start_obj = Start.view("fatme/start", limit=1).one()
     except RequestFailed:
         return HttpResponse(json.dumps({'error': 'The service is temporarily unavailable', 'status': 503}), status=503)
