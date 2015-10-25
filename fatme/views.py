@@ -115,7 +115,7 @@ def csvhistory(request):
 
     for weight in weights:
         days = (weight['date'] - start_date).days
-        if days >= total_days:
+        if days >= total_goal:
             goal_today = goal
         else:
             goal_today = round(start - (k * days), 4)
@@ -170,7 +170,13 @@ def home(request):
     est_day = date.today() + timedelta(days=int(days_left))
 
     total_goal = start - goal
-    goal_today = round(start-((total_goal/total_days)*days), 1)
+
+    if total_days > days:
+        goal_today = round(start - ((total_goal / total_days) * days), 1)
+        goal_loss_today = start - goal_today
+    else:
+        goal_today = goal
+        goal_loss_today = left
 
     diff = today['weight'] - goal_today
 
