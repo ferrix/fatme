@@ -14,6 +14,9 @@ urlpatterns = [
 
 if getattr(settings, 'WITHINGS_ENABLED', False):
     urlpatterns.extend([
+        url(r'^api/withings/auth/$', 'fatme.views.withings_auth_start'),
+        url(r'^api/withings/auth/callback/$', 'fatme.views.withings_callback',
+            name='withings_callback'),
         url(r'^api/withings/$', 'fatme.views.withings', name='withings'),
         url(r'^api/withings/save/$', 'fatme.views.withings_save',
             name='withings_save'),

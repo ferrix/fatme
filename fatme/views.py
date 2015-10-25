@@ -37,11 +37,18 @@ class WithingsAuth(WiAu):
 
 
 def get_withings_latest():
-    c = WithingsCredentials(access_token=settings.WITHINGS_ACCESS_KEY,
-                            access_token_secret=settings.WITHINGS_ACCESS_SECRET,
+    start_obj = Start.view("fatme/start", limit=1).first()
+    start_obj = Start.get(start_obj._id)
+
+    access_token = start_obj.access_key
+    access_token_secret = start_obj.access_secret
+    user_id = start_obj.user_id
+
+    c = WithingsCredentials(access_token=access_token,
+                            access_token_secret=access_token_secret,
                             consumer_key=settings.WITHINGS_API_KEY,
                             consumer_secret=settings.WITHINGS_API_SECRET,
-                            user_id=settings.WITHINGS_USER_ID)
+                            user_id=user_id)
 
     client = WithingsApi(c)
 
@@ -62,11 +69,13 @@ def withings_auth_start(request):
 
 
 def withings_callback(request):
-    start_obj = Start.view("fatme/start", limit=1).one()
+    start_obj = Start.view("fatme/start", limit=1).first()
+    start_obj = Start.get(start_obj._id)
 
     try:
         oauth_verifier = request.GET['oauth_verifier']
         oauth_token = request.GET['oauth_token']
+        user_id = request.GET['userid']
     except KeyError:
         return HttpResponseBadRequest()
 
@@ -75,13 +84,16 @@ def withings_callback(request):
     auth.oauth_token = oauth_token
     auth.oauth_secret = request.session['oas']
 
+    print 'OAUTH_SECRET', auth.oauth_secret
+
     creds = auth.get_credentials(oauth_verifier)
 
     start_obj.access_key = creds.access_token
-    start_obj.access_secret = creds.access_token_key
+    start_obj.access_secret = creds.access_token_secret
+    start_obj.user_id = user_id
     start_obj.save()
 
-    redirect(reverse('withings'))
+    return redirect(reverse('withings'))
 
 
 @logged_in_or_basicauth('fatme')

@@ -21,6 +21,7 @@ class Start(Document):
     picture = StringProperty(required=True)
     access_key = StringProperty(required=False)
     access_secret = StringProperty(required=False)
+    user_id = StringProperty(required=False)
 
     def save(self, *args, **kwargs):
         if not self._id:
