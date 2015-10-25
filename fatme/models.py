@@ -19,6 +19,8 @@ class Start(Document):
     final_day = DateProperty(required=True)
     name = StringProperty(required=True)
     picture = StringProperty(required=True)
+    access_key = StringProperty(required=False)
+    access_secret = StringProperty(required=False)
 
     def save(self, *args, **kwargs):
         if not self._id:

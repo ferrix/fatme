@@ -4,21 +4,36 @@ import logging
 from StringIO import StringIO
 from datetime import date, timedelta
 
+from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.http import HttpResponse
 from restkit.errors import RequestFailed
 from django.template import RequestContext
 from django.shortcuts import render, redirect
 from couchdbkit.exceptions import ResourceConflict
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseBadRequest
 
-from withings import WithingsCredentials, WithingsApi
+from withings import (WithingsCredentials, WithingsApi, WithingsAuth as WiAu,
+                      OAuth1Session)
 
 from fatme.forms import WeightForm
 from fatme.models import Weight, Start
 from fatme.snip import logged_in_or_basicauth
 
 logger = logging.getLogger()
+
+
+class WithingsAuth(WiAu):
+    def get_authorize_url(self):
+        oauth = OAuth1Session(self.consumer_key,
+                              client_secret=self.consumer_secret,
+                              callback_uri=self.callback_url)
+
+        tokens = oauth.fetch_request_token('%s/request_token' % self.URL)
+        self.oauth_token = tokens['oauth_token']
+        self.oauth_secret = tokens['oauth_token_secret']
+
+        return oauth.authorization_url('%s/authorize' % self.URL)
 
 
 def get_withings_latest():
@@ -31,6 +46,42 @@ def get_withings_latest():
     client = WithingsApi(c)
 
     return client.get_measures(limit=1, meastype=1)[0]
+
+
+@logged_in_or_basicauth('fatme')
+def withings_auth_start(request):
+    auth = WithingsAuth(settings.WITHINGS_API_KEY,
+                        settings.WITHINGS_API_SECRET)
+    auth.callback_url = request.build_absolute_uri(reverse('withings_callback'))
+
+    res = redirect(auth.get_authorize_url())
+
+    request.session['oas'] = auth.oauth_secret
+
+    return res
+
+
+def withings_callback(request):
+    start_obj = Start.view("fatme/start", limit=1).one()
+
+    try:
+        oauth_verifier = request.GET['oauth_verifier']
+        oauth_token = request.GET['oauth_token']
+    except KeyError:
+        return HttpResponseBadRequest()
+
+    auth = WithingsAuth(settings.WITHINGS_API_KEY,
+                        settings.WITHINGS_API_SECRET)
+    auth.oauth_token = oauth_token
+    auth.oauth_secret = request.session['oas']
+
+    creds = auth.get_credentials(oauth_verifier)
+
+    start_obj.access_key = creds.access_token
+    start_obj.access_secret = creds.access_token_key
+    start_obj.save()
+
+    redirect(reverse('withings'))
 
 
 @logged_in_or_basicauth('fatme')
