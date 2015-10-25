@@ -22,6 +22,8 @@ if getattr(settings, 'WITHINGS_ENABLED', False):
             name='withings_analyse'),
         url(r'^api/withings/sync/$', 'fatme.views.withings_sync',
             name='withings_sync'),
+        url(r'^api/withings/queue/$', 'fatme.views.withings_queue',
+            name='withings_queue'),
         url(r'^api/withings/save/$', 'fatme.views.withings_save',
             name='withings_save'),
     ])

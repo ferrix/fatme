@@ -66,28 +66,36 @@ def get_withings_all_weights():
     return client.get_measures(meastype=1)
 
 
-def get_withings_analysis():
+def get_withings_analysis(get_dates=False):
     measures = get_withings_all_weights()
 
     res = {'number': len(measures)}
 
     n_new = 0
 
-    dates = {}
+    if get_dates:
+        dates = {}
     nudates = {}
+    conflicts = {}
+    precision = {}
+    minimize = {}
+    resolved = 0
+    identicals = 0
 
     for meas in measures:
         date = meas.date.date()
         key = date.isoformat()
 
-        if key not in dates:
-            dates[key] = [0, date]
+        if get_dates:
+            if key not in dates:
+                dates[key] = [0, date]
 
-        dates[key][0] += 1
-        dates[key].append(round(meas.weight, 3))
+            dates[key][0] += 1
+            dates[key].append(round(meas.weight, 3))
 
         try:
-            Weight.get(key)
+            collision = Weight.get(key)
+
         except:
             if key not in nudates:
                 nudates[key] = [0, date]
@@ -97,18 +105,64 @@ def get_withings_analysis():
 
             n_new += 1
 
+        else:
+            if hasattr(collision, 'fixed'):
+                resolved += 1
+                continue
+
+            if ((collision.weight == round(meas.weight, 3) or
+                 collision.weight == round(meas.weight, 2))):
+                identicals += 1
+            elif (collision.weight == round(meas.weight, 1) or
+                  int(abs(100 * (collision.weight - meas.weight))) <= 5):
+                if key not in precision:
+                    precision[key] = [0, date, collision.weight]
+
+                precision[key].append(meas.weight)
+                precision[key][0] += 1
+            elif int(abs(10 * (collision.weight - meas.weight))) <= 1:
+                if key not in minimize:
+                    minimize[key] = [0, date, collision.weight]
+
+                minimize[key].append(meas.weight)
+                minimize[key][0] += 1
+            else:
+                if key not in conflicts:
+                    conflicts[key] = [0, date, collision.weight]
+
+                conflicts[key].append(meas.weight)
+                conflicts[key][0] += 1
+
+    if get_dates:
+        res['uniqday'] = len(dates)
+        res['dates'] = dates
+
+    res['resolved'] = resolved
     res['uniqnu'] = len(nudates)
-    res['uniqday'] = len(dates)
     res['new'] = n_new
-    res['dates'] = dates
     res['nudates'] = nudates
+    res['conflicts'] = conflicts
+    res['numconflicts'] = len(conflicts)
+    res['precision'] = precision
+    res['minimize'] = minimize
+    res['numprecision'] = len(precision)
+    res['numminimize'] = len(minimize)
+    res['identicals'] = identicals
 
     return res
 
 
 @logged_in_or_basicauth('fatme')
-def withings_analyse(request):
+def withings_queue(request):
     res = get_withings_analysis()
+
+    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
+                        content_type='application/json')
+
+
+@logged_in_or_basicauth('fatme')
+def withings_analyse(request):
+    res = get_withings_analysis(True)
 
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
                         content_type='application/json')
@@ -120,6 +174,8 @@ def withings_sync(request):
 
     skips = []
     syncs = 0
+    psyncs = 0
+    msyncs = 0
 
     for d, w in res['nudates'].iteritems():
         if w[0] != 1:
@@ -129,8 +185,34 @@ def withings_sync(request):
         Weight(date=w[1], weight=w[2]).save()
         syncs += 1
 
+    for d, w in res['precision'].iteritems():
+        if w[0] != 1:
+            fix = min(w[3:])
+        else:
+            fix = w[3]
+
+        wt = Weight.get(d)
+        wt.date = w[1]
+        wt.weight = round(fix, 2)
+        wt.fixed = 'precision'
+        wt.save()
+        psyncs += 1
+
+    for d, w in res['minimize'].iteritems():
+        fix = min(w[2:])
+
+        wt = Weight.get(d)
+        wt.date = w[1]
+        wt.weight = round(fix, 2)
+        wt.fixed = 'minimize'
+        wt.save()
+        msyncs += 1
+
     res['skips'] = skips
+    res['numskips'] = len(skips)
     res['syncs'] = syncs
+    res['psyncs'] = psyncs
+    res['msyncs'] = msyncs
 
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
                         content_type='application/json')
