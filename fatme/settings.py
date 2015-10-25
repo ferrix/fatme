@@ -32,9 +32,9 @@ COUCHDB_DATABASES = (
 try:
     WITHINGS_API_KEY = os.environ['WITHINGS_API_KEY']
     WITHINGS_API_SECRET = os.environ['WITHINGS_API_SECRET']
-    WITHINGS_ACCESS_KEY = os.environ['WITHINGS_ACCESS_KEY']
-    WITHINGS_ACCESS_SECRET = os.environ['WITHINGS_ACCESS_SECRET']
-    WITHINGS_USER_ID = os.environ['WITHINGS_USER_ID']
+    WITHINGS_ACCESS_KEY = os.environ.get('WITHINGS_ACCESS_KEY', None)
+    WITHINGS_ACCESS_SECRET = os.environ.get('WITHINGS_ACCESS_SECRET', None)
+    WITHINGS_USER_ID = os.environ.get('WITHINGS_USER_ID', None)
 except KeyError:
     pass
 else:
