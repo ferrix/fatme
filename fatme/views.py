@@ -176,7 +176,7 @@ def home(request):
         goal_loss_today = start - goal_today
     else:
         goal_today = goal
-        goal_loss_today = left
+        goal_loss_today = start - goal
 
     diff = today['weight'] - goal_today
 
