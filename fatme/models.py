@@ -1,6 +1,7 @@
 from couchdbkit.ext.django.schema import *
 from datetime import date
 
+
 class Weight(Document):
     date = DateProperty(default=date.today, required=True)
     weight = FloatProperty(required=True)
@@ -9,6 +10,7 @@ class Weight(Document):
         if not self._id:
             self._id = self.date.isoformat()
         super(Weight, self).save(*args, **kwargs)
+
 
 class Start(Document):
     date = DateProperty(default=date.today, required=True)
@@ -25,5 +27,5 @@ class Start(Document):
 
     def save(self, *args, **kwargs):
         if not self._id:
-            self._id = u's'+self.date.isoformat()
+            self._id = u's' + self.date.isoformat()
         super(Start, self).save(*args, **kwargs)
