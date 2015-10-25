@@ -18,6 +18,10 @@ if getattr(settings, 'WITHINGS_ENABLED', False):
         url(r'^api/withings/auth/callback/$', 'fatme.views.withings_callback',
             name='withings_callback'),
         url(r'^api/withings/$', 'fatme.views.withings', name='withings'),
+        url(r'^api/withings/analyse/$', 'fatme.views.withings_analyse',
+            name='withings_analyse'),
+        url(r'^api/withings/sync/$', 'fatme.views.withings_sync',
+            name='withings_sync'),
         url(r'^api/withings/save/$', 'fatme.views.withings_save',
             name='withings_save'),
     ])

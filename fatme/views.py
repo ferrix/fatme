@@ -4,13 +4,14 @@ import logging
 from StringIO import StringIO
 from datetime import date, timedelta
 
-from django.core.urlresolvers import reverse
 from django.conf import settings
 from restkit.errors import RequestFailed
 from django.template import RequestContext
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from couchdbkit.exceptions import ResourceConflict
 from django.views.decorators.csrf import csrf_exempt
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from withings import (WithingsCredentials, WithingsApi, WithingsAuth as WiAu,
@@ -36,7 +37,7 @@ class WithingsAuth(WiAu):
         return oauth.authorization_url('%s/authorize' % self.URL)
 
 
-def get_withings_latest():
+def get_withings_client():
     start_obj = Start.view("fatme/start", limit=1).first()
     start_obj = Start.get(start_obj._id)
 
@@ -50,9 +51,89 @@ def get_withings_latest():
                             consumer_secret=settings.WITHINGS_API_SECRET,
                             user_id=user_id)
 
-    client = WithingsApi(c)
+    return WithingsApi(c)
+
+
+def get_withings_latest():
+    client = get_withings_client()
 
     return client.get_measures(limit=1, meastype=1)[0]
+
+
+def get_withings_all_weights():
+    client = get_withings_client()
+
+    return client.get_measures(meastype=1)
+
+
+def get_withings_analysis():
+    measures = get_withings_all_weights()
+
+    res = {'number': len(measures)}
+
+    n_new = 0
+
+    dates = {}
+    nudates = {}
+
+    for meas in measures:
+        date = meas.date.date()
+        key = date.isoformat()
+
+        if key not in dates:
+            dates[key] = [0, date]
+
+        dates[key][0] += 1
+        dates[key].append(round(meas.weight, 3))
+
+        try:
+            Weight.get(key)
+        except:
+            if key not in nudates:
+                nudates[key] = [0, date]
+
+            nudates[key][0] += 1
+            nudates[key].append(round(meas.weight, 3))
+
+            n_new += 1
+
+    res['uniqnu'] = len(nudates)
+    res['uniqday'] = len(dates)
+    res['new'] = n_new
+    res['dates'] = dates
+    res['nudates'] = nudates
+
+    return res
+
+
+@logged_in_or_basicauth('fatme')
+def withings_analyse(request):
+    res = get_withings_analysis()
+
+    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
+                        content_type='application/json')
+
+
+@logged_in_or_basicauth('fatme')
+def withings_sync(request):
+    res = get_withings_analysis()
+
+    skips = []
+    syncs = 0
+
+    for d, w in res['nudates'].iteritems():
+        if w[0] != 1:
+            skips.append([d, w])
+            continue
+
+        Weight(date=w[1], weight=w[2]).save()
+        syncs += 1
+
+    res['skips'] = skips
+    res['syncs'] = syncs
+
+    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
+                        content_type='application/json')
 
 
 @logged_in_or_basicauth('fatme')
