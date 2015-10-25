@@ -4,6 +4,7 @@ import logging
 from StringIO import StringIO
 from datetime import date, timedelta
 
+from django.conf import settings
 from django.http import HttpResponse
 from restkit.errors import RequestFailed
 from django.template import RequestContext
@@ -11,11 +12,65 @@ from django.shortcuts import render, redirect
 from couchdbkit.exceptions import ResourceConflict
 from django.views.decorators.csrf import csrf_exempt
 
+from withings import WithingsCredentials, WithingsApi
+
 from fatme.forms import WeightForm
 from fatme.models import Weight, Start
 from fatme.snip import logged_in_or_basicauth
 
 logger = logging.getLogger()
+
+
+def get_withings_latest():
+    c = WithingsCredentials(access_token=settings.WITHINGS_ACCESS_KEY,
+                            access_token_secret=settings.WITHINGS_ACCESS_SECRET,
+                            consumer_key=settings.WITHINGS_API_KEY,
+                            consumer_secret=settings.WITHINGS_API_SECRET,
+                            user_id=settings.WITHINGS_USER_ID)
+
+    client = WithingsApi(c)
+
+    return client.get_measures(limit=1, meastype=1)[0]
+
+
+@logged_in_or_basicauth('fatme')
+def withings(request):
+    if not getattr(settings, 'WITHINGS_ENABLED', False):
+        return HttpResponse('disabled')
+
+    last_measure = get_withings_latest()
+
+    resp = {'weight': last_measure.weight,
+            'date': last_measure.date.isoformat()}
+
+    return HttpResponse(json.dumps(resp),
+                        content_type='application/json')
+
+
+@logged_in_or_basicauth('fatme')
+def withings_save(request):
+    if not getattr(settings, 'WITHINGS_ENABLED', False):
+        return HttpResponse('disabled')
+
+    last_measure = get_withings_latest()
+
+    new = True
+
+    try:
+        instance = Weight.get(last_measure.date.date().isoformat())
+        new = False
+    except:
+        instance = Weight(date=last_measure.date.date().isoformat())
+
+    instance.weight = float(last_measure.weight)
+    instance.save()
+
+    resp = {'date': last_measure.date.isoformat(),
+            'weight': last_measure.weight,
+            'new': new}
+
+    return HttpResponse(json.dumps(resp),
+                        content_type='application/json')
 
 
 @logged_in_or_basicauth('fatme')

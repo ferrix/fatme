@@ -29,6 +29,17 @@ COUCHDB_DATABASES = (
     ('fatme', CLOUDANT_URL + '/fatme'),
 )
 
+try:
+    WITHINGS_API_KEY = os.environ['WITHINGS_API_KEY']
+    WITHINGS_API_SECRET = os.environ['WITHINGS_API_SECRET']
+    WITHINGS_ACCESS_KEY = os.environ['WITHINGS_ACCESS_KEY']
+    WITHINGS_ACCESS_SECRET = os.environ['WITHINGS_ACCESS_SECRET']
+    WITHINGS_USER_ID = os.environ['WITHINGS_USER_ID']
+except KeyError:
+    pass
+else:
+    WITHINGS_ENABLED = 1
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
