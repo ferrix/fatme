@@ -13,14 +13,14 @@ ADMINS = (
     ('Ferrix Hovi', 'ferrix@ferrix.fi'),
 )
 
-SERVER_EMAIL='fatme@ferrix.fi'
+SERVER_EMAIL = 'fatme@ferrix.fi'
 
 MANAGERS = ADMINS
 
 import dj_database_url
 
 DATABASES = {
-        'default': dj_database_url.config(default='postgres://localhost/fatme'),
+    'default': dj_database_url.config(default='postgres://localhost/fatme'),
 }
 
 CLOUDANT_URL = os.environ.get("CLOUDANT_URL")
@@ -83,7 +83,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -93,7 +93,7 @@ SECRET_KEY = '^+*!r2*=txc_%6xak1454taku$f&amp;)tq=((s+zf+-h)rjx^$w9o'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -133,8 +133,6 @@ INSTALLED_APPS = (
     'raven.contrib.django.raven_compat',
     'fatme',
 )
-
-from logging.handlers import SysLogHandler
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
