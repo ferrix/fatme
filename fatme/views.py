@@ -215,6 +215,10 @@ def home(request):
     begin['bmi'] = bmi(begin['weight'], height)
     begin['trefethen'] = trefethen(begin['weight'], height)
 
+    sorted_weights = []
+    m = begin['date'].month
+    mw = []
+
     for i, weight in enumerate(weights):
         if i > 0:
             change = weight['weight'] - prev[-1]
@@ -245,9 +249,18 @@ def home(request):
                 weight['chg_avg'] = round(weight['avg'] - prev_avg, 2)
             prev_avg = weight['avg']
 
+        if weight['date'].month == m:
+            mw.insert(0, weight)
+        else:
+            m = weight['date'].month
+            sorted_weights.extend(mw)
+            mw = [weight]
+
+    sorted_weights.extend(mw)
+
     return render(request,
                   "home.html",
-                  {"weights": weights,
+                  {"weights": reversed(sorted_weights),
                    "goal": goal,
                    "today": today,
                    "left": left,
