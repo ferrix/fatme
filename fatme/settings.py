@@ -3,8 +3,8 @@
 import os
 import sys
 
-from djheroku import sendgrid
-vars().update(sendgrid())
+from djheroku import autopilot
+autopilot(vars())
 
 DEBUG = os.environ.get('DEBUG') and True or False
 TEMPLATE_DEBUG = DEBUG
