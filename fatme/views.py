@@ -2,7 +2,7 @@ import csv
 import json
 import logging
 from StringIO import StringIO
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from django.conf import settings
 from restkit.errors import RequestFailed
@@ -150,6 +150,27 @@ def get_withings_analysis(get_dates=False):
     res['identicals'] = identicals
 
     return res
+
+
+@logged_in_or_basicauth('fatme')
+def withings_resolve(request):
+    d = datetime.strptime(request.GET['date'], '%Y-%m-%d').date()
+    w = float(request.GET['weight'])
+    r = request.GET.get('resolution', 'user')
+    n = request.GET.get('new', False)
+
+    if n:
+        wt = Weight(date=d, weight=w, fix=r).save()
+    else:
+        wt = Weight.get(d.isoformat())
+        wt.weight = w
+        wt.fix = r
+        wt.save()
+
+    res = {'weight': w, 'date': d, 'new': n, 'resolved': 1}
+
+    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
+                        content_type='application/json')
 
 
 @logged_in_or_basicauth('fatme')
