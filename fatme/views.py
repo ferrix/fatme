@@ -307,7 +307,7 @@ def withings_save(request):
         instance = Weight.get(last_measure.date.date().isoformat())
         new = False
     except:
-        instance = Weight(date=last_measure.date.date().isoformat())
+        instance = Weight(date=last_measure.date.date())
 
     instance.weight = float(last_measure.weight)
     instance.save()
