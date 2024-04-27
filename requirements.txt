@@ -1,5 +1,5 @@
 Django>=1.5,<1.6
-gunicorn==0.16.1
+gunicorn==22.0.0
 couchdbkit==0.6.3
 dj-database-url==0.2.1
 Djheroku==0.5.5
